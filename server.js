@@ -30,6 +30,32 @@ app.get("/flights/:id", async (req, res) => {
   }
 })
 
+app.put(`/flights/:id`, async (req, res) => {
+  try {
+    let { id } = req.params
+    let flight = await Flight.findByIdAndUpdate(id, req.body, { new: true })
+    if (flight) {
+      return res.status(200).json(flight)
+    }
+    throw new Error("Flight not found")
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+})
+
+app.put(`/airports/:id`, async (req, res) => {
+  try {
+    let { id } = req.params
+    let airport = await Airport.findByIdAndUpdate(id, req.body, { new: true })
+    if (airport) {
+      return res.status(200).json(airport)
+    }
+    throw new Error("Airport not found")
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+})
+
 app.get("/airports", async (req, res) => {
   const airports = await Airport.find({})
   res.json(airports)
@@ -82,6 +108,19 @@ app.delete("/flights/:id", async (req, res) => {
       return res.status(200).send("Flight deleted")
     }
     throw new Error("Flight not found")
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+})
+
+app.delete("/airports/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const deleted = await Airport.findByIdAndDelete(id)
+    if (deleted) {
+      return res.status(200).send("Airport deleted")
+    }
+    throw new Error("Airport not found")
   } catch (error) {
     return res.status(500).send(error.message)
   }
